@@ -1,0 +1,23 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "images"
+
+collections:
+  - name: "products"
+    label: "المنتجات"
+    folder: ""
+    create: false
+    slug: "{{slug}}"
+    fields:
+      - {label: "اسم المنتج", name: "name", widget: "string", default: ""}
+      - {label: "السعر", name: "price", widget: "number", default: 0}
+      - {label: "السعر القديم (اختياري)", name: "oldPrice", widget: "number", required: false}
+      - {label: "الفئة", name: "category", widget: "select", options: ["electronics", "clothing", "home", "beauty"]}
+      - {label: "الصورة", name: "image", widget: "image", default: ""}
+      - {label: "التقييم", name: "rating", widget: "select", options: [1, 2, 3, 4, 5]}
+      - {label: "الوصف", name: "description", widget: "text", default: ""}
+
+display_url: "https://your-site.netlify.app"

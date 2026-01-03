@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="لوحة تحكم LUXE - إدارة المتجر">
+    <title>لوحة تحكم LUXE Store</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #242424;
+            --bg-card: #1e1e1e;
+            --gold-primary: #D4AF37;
+            --gold-hover: #E8C547;
+            --gold-light: #F4D03F;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0A0;
+            --text-muted: #6B6B6B;
+            --border-color: #333333;
+            --success-color: #4ADE80;
+            --error-color: #F87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .admin-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-hover));
+            border-radius: 12px;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+        }
+
+        .version-badge {
+            padding: 8px 16px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--gold-primary);
+            border-radius: 20px;
+            color: var(--gold-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-hover));
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .admin-main {
+            padding-top: 120px;
+            padding-bottom: 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        /* Instructions Panel */
+        .instructions-panel {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(157, 78, 221, 0.1));
+            border: 1px solid var(--gold-primary);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .instructions-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+            margin-bottom: 16px;
+        }
+
+        .instructions-list {
+            list-style: none;
+        }
+
+        .instructions-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .instructions-list li:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--gold-primary);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        .step-text strong {
+            color: var(--gold-primary);
+        }
+
+        /* Products Grid */
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        }
+
+        .product-image-container {
+            position: relative;
+            height: 250px;
+            background: var(--bg-tertiary);
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover .edit-overlay {
+            opacity: 1;
+        }
+
+        .edit-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--gold-primary);
+            color: var(--bg-primary);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        /* Edit Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold-primary);
+        }
+
+        .modal-close {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .price-input-wrapper {
+            position: relative;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .price-input {
+            padding-left: 45px;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            background: var(--success-color);
+            color: var(--bg-primary);
+            border-radius: 12px;
+            font-weight: 600;
+            z-index: 5000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .admin-main {
+                padding-top: 160px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                margin: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">✦</div>
+                <span class="logo-text">LUXE</span>
+                <span class="version-badge">V6.0 FINAL</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="resetToDefaults()">🔄 إعادة تعيين</button>
+                <a href="index.html" class="btn btn-primary" target="_blank">👁️ معاينة المتجر</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Instructions Panel -->
+        <div class="instructions-panel">
+            <h2 class="instructions-title">📋 تعليمات تغيير الصور والنصوص</h2>
+            <ul class="instructions-list">
+                <li>
+                    <span class="step-number">1</span>
+                    <div class="step-text">
+                        <strong>لتغيير الصور:</strong> ضع صورتك الجديدة في مجلد <code>images/</code> على جهازك، ويجب أن يكون لها نفس الاسم (مثلاً: <code>product-01.jpg</code>، <code>product-02.jpg</code>، إلخ)
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">2</span>
+                    <div class="step-text">
+                        <strong>لتغيير النصوص:</strong> انقر على أي منتج في الأسفل، ثم غيّر الاسم أو السعر أو الوصف، واضغط "حفظ"
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">3</span>
+                    <div class="step-text">
+                        <strong>للرفع على النت:</strong> بعد الانتهاء، ارفع <strong>المجلد كاملاً</strong> (بما فيه مجلد images وملف products.json) إلى Netlify
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section-header">
+            <h1 class="section-title">المنتجات</h1>
+            <p class="section-subtitle">انقر على أي منتج لتعديله</p>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ تعديل المنتج</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">اسم المنتج</label>
+                    <input type="text" class="form-input" id="productName" placeholder="أدخل اسم المنتج">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">السعر</label>
+                    <div class="price-input-wrapper">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" class="form-input price-input" id="productPrice" placeholder="0" step="0.01">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">الوصف</label>
+                    <textarea class="form-input form-textarea" id="productDescription" placeholder="أدخل وصف المنتج"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveChanges()">💾 حفظ التغييرات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">✅ تم الحفظ بنجاح!</div>
+
+    <script>
+        // بيانات المنتجات الافتراضية
+        const defaultProducts = [
+            {
+                id: 1,
+                name: "Premium Wireless Headphones",
+                price: 299,
+                oldPrice: 399,
+                category: "electronics",
+                image: "images/product-01.jpg",
+                rating: 5,
+                description: "Experience crystal-clear audio with our premium wireless headphones featuring active noise cancellation, 30-hour battery life, and ultra-comfortable memory foam ear cushions."
+            },
+            {
+                id: 2,
+                name: "Smart Watch Pro",
+                price: 499,
+                oldPrice: null,
+                category: "electronics",
+                image: "images/product-02.jpg",
+                rating: 5,
+                description: "Stay connected and healthy with our advanced smartwatch featuring heart rate monitoring, GPS tracking, and seamless smartphone integration."
+            },
+            {
+                id: 3,
+                name: "Ultra HD 4K Monitor",
+                price: 699,
+                oldPrice: 899,
+                category: "electronics",
+                image: "images/product-03.jpg",
+                rating: 4,
+                description: "Immerse yourself in stunning 4K resolution with this professional-grade monitor featuring HDR support and USB-C connectivity."
+            },
+            {
+                id: 4,
+                name: "Wireless Gaming Mouse",
+                price: 149,
+                oldPrice: null,
+                category: "electronics",
+                image: "images/product-04.jpg",
+                rating: 5,
+                description: "Precision engineered for gaming with 20,000 DPI sensor, ultra-low latency wireless connection, and ergonomic design."
+            },
+            {
+                id: 5,
+                name: "Bluetooth Speaker",
+                price: 199,
+                oldPrice: 249,
+                category: "electronics",
+                image: "images/product-05.jpg",
+                rating: 4,
+                description: "Powerful 360° sound with deep bass, waterproof design perfect for outdoor adventures, and 24-hour battery life."
+            },
+            {
+                id: 6,
+                name: "Mechanical Keyboard",
+                price: 179,
+                oldPrice: null,
+                category: "electronics",
+                image: "images/product-06.jpg",
+                rating: 5,
+                description: "Premium mechanical keyboard with RGB backlighting, hot-swappable switches, and aircraft-grade aluminum frame."
+            },
+            {
+                id: 7,
+                name: "Portable SSD 1TB",
+                price: 129,
+                oldPrice: 159,
+                category: "electronics",
+                image: "images/product-07.jpg",
+                rating: 4,
+                description: "Ultra-fast portable solid state drive with read speeds up to 1050MB/s, compact design, and secure encryption."
+            },
+            {
+                id: 8,
+                name: "Premium Cotton Shirt",
+                price: 89,
+                oldPrice: null,
+                category: "clothing",
+                image: "images/product-08.jpg",
+                rating: 5,
+                description: "Luxuriously soft 100% Egyptian cotton shirt with a modern slim fit, perfect for both casual and formal occasions."
+            },
+            {
+                id: 9,
+                name: "Designer Leather Jacket",
+                price: 399,
+                oldPrice: 499,
+                category: "clothing",
+                image: "images/product-09.jpg",
+                rating: 5,
+                description: "Handcrafted genuine leather jacket with timeless styling, premium YKK zippers, and exceptional durability."
+            },
+            {
+                id: 10,
+                name: "Slim Fit Chinos",
+                price: 79,
+                oldPrice: null,
+                category: "clothing",
+                image: "images/product-10.jpg",
+                rating: 4,
+                description: "Versatile slim fit chinos crafted from premium stretch cotton, featuring a modern cut and comfortable wear throughout the day."
+            },
+            {
+                id: 11,
+                name: "Cashmere Sweater",
+                price: 249,
+                oldPrice: 299,
+                category: "clothing",
+                image: "images/product-11.jpg",
+                rating: 5,
+                description: "Luxuriously soft 100% cashmere sweater, the epitome of comfort and elegance for the discerning gentleman."
+            },
+            {
+                id: 12,
+                name: "Oxford Shoes",
+                price: 189,
+                oldPrice: null,
+                category: "clothing",
+                image: "images/product-12.jpg",
+                rating: 5,
+                description: "Classic Oxford shoes handmade from premium Italian leather, featuring Goodyear welt construction for exceptional quality."
+            },
+            {
+                id: 13,
+                name: "Silk Tie Set",
+                price: 69,
+                oldPrice: null,
+                category: "clothing",
+                image: "images/product-13.jpg",
+                rating: 4,
+                description: "Elegant silk tie set including tie, pocket square, and cufflinks, perfect for business and formal occasions."
+            },
+            {
+                id: 14,
+                name: "Ceramic Vase Set",
+                price: 79,
+                oldPrice: 99,
+                category: "home",
+                image: "images/product-14.jpg",
+                rating: 5,
+                description: "Handcrafted ceramic vase set with modern minimalist design, perfect for displaying fresh or dried flowers."
+            },
+            {
+                id: 15,
+                name: "Scented Candle Collection",
+                price: 59,
+                oldPrice: null,
+                category: "home",
+                image: "images/product-15.jpg",
+                rating: 5,
+                description: "Luxury scented candle collection with three distinctive fragrances: vanilla bean, cedar wood, and jasmine blossom."
+            },
+            {
+                id: 16,
+                name: "Velvet Throw Blanket",
+                price: 129,
+                oldPrice: 159,
+                category: "home",
+                image: "images/product-16.jpg",
+                rating: 4,
+                description: "Ultra-soft velvet throw blanket with elegant fringe detailing, perfect for adding warmth and style to any room."
+            },
+            {
+                id: 17,
+                name: "Marble Coffee Table",
+                price: 449,
+                oldPrice: null,
+                category: "home",
+                image: "images/product-17.jpg",
+                rating: 5,
+                description: "Stunning marble coffee table with solid brass legs, a statement piece that elevates any living space."
+            },
+            {
+                id: 18,
+                name: "Abstract Art Print",
+                price: 89,
+                oldPrice: null,
+                category: "home",
+                image: "images/product-18.jpg",
+                rating: 4,
+                description: "Museum-quality abstract art print on premium paper, professionally framed and ready to hang."
+            },
+            {
+                id: 19,
+                name: "Luxury Skincare Set",
+                price: 189,
+                oldPrice: 229,
+                category: "beauty",
+                image: "images/product-19.jpg",
+                rating: 5,
+                description: "Complete skincare set including cleanser, toner, serum, and moisturizer, formulated with premium natural ingredients."
+            },
+            {
+                id: 20,
+                name: "Perfume Collection",
+                price: 149,
+                oldPrice: null,
+                category: "beauty",
+                image: "images/product-20.jpg",
+                rating: 5,
+                description: "Exquisite perfume collection featuring three signature scents: floral, oriental, and fresh notes."
+            },
+            {
+                id: 21,
+                name: "Premium Hair Care Kit",
+                price: 99,
+                oldPrice: 129,
+                category: "beauty",
+                image: "images/product-21.jpg",
+                rating: 4,
+                description: "Professional hair care kit with shampoo, conditioner, and hair mask, enriched with argan oil and keratin."
+            },
+            {
+                id: 22,
+                name: "Makeup Brush Set",
+                price: 79,
+                oldPrice: null,
+                category: "beauty",
+                image: "images/product-22.jpg",
+                rating: 5,
+                description: "Professional 12-piece makeup brush set with synthetic bristles, vegan-friendly materials, and elegant storage case."
+            },
+            {
+                id: 23,
+                name: "Face Serum Trio",
+                price: 159,
+                oldPrice: null,
+                category: "beauty",
+                image: "images/product-23.jpg",
+                rating: 5,
+                description: "Advanced face serum trio targeting hydration, anti-aging, and brightening for complete skincare routine."
+            },
+            {
+                id: 24,
+                name: "Organic Face Mask Set",
+                price: 49,
+                oldPrice: null,
+                category: "beauty",
+                image: "images/product-24.jpg",
+                rating: 4,
+                description: "Set of 10 premium organic face masks targeting various skin concerns including hydration, detox, and brightening."
+            }
+        ];
+
+        // متغيرات عامة
+        let products = [];
+        let currentProduct = null;
+
+        // تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            renderProducts();
+        });
+
+        // تحميل المنتجات من LocalStorage أو المنتجات الافتراضية
+        function loadProducts() {
+            const storedProducts = localStorage.getItem('luxe_products');
+            if (storedProducts) {
+                try {
+                    products = JSON.parse(storedProducts);
+                } catch (e) {
+                    products = [...defaultProducts];
+                }
+            } else {
+                products = [...defaultProducts];
+                localStorage.setItem('luxe_products', JSON.stringify(products));
+            }
+        }
+
+        // حفظ المنتجات
+        function saveProducts() {
+            localStorage.setItem('luxe_products', JSON.stringify(products));
+        }
+
+        // عرض المنتجات
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="openEditModal(${product.id})">
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='images/placeholder-product.svg'">
+                        <div class="edit-overlay">
+                            <span class="edit-badge">✏️ تعديل</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">$${product.price}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // فتح نافذة التعديل
+        function openEditModal(productId) {
+            currentProduct = products.find(p => p.id === productId);
+            if (!currentProduct) return;
+
+            // ملء البيانات
+            document.getElementById('productName').value = currentProduct.name;
+            document.getElementById('productPrice').value = currentProduct.price;
+            document.getElementById('productDescription').value = currentProduct.description || '';
+
+            // فتح النافذة
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق النافذة
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentProduct = null;
+        }
+
+        // حفظ التغييرات
+        function saveChanges() {
+            if (!currentProduct) return;
+
+            const name = document.getElementById('productName').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value);
+            const description = document.getElementById('productDescription').value.trim();
+
+            if (!name || !price) {
+                showToast('⚠️ يرجى ملء اسم المنتج والسعر');
+                return;
+            }
+
+            // تحديث البيانات
+            currentProduct.name = name;
+            currentProduct.price = price;
+            currentProduct.description = description;
+
+            // حفظ في LocalStorage
+            saveProducts();
+
+            // إعادة عرض المنتجات
+            renderProducts();
+
+            // إغلاق النافذة
+            closeModal();
+
+            // إظهار رسالة النجاح
+            showToast('✅ تم حفظ التغييرات بنجاح!');
+        }
+
+        // إعادة تعيين للوضع الافتراضي
+        function resetToDefaults() {
+            if (confirm('هل أنت متأكد من إعادة تعيين جميع المنتجات؟ سيتم حذف جميع التغييرات.')) {
+                products = [...defaultProducts];
+                saveProducts();
+                renderProducts();
+                showToast('🔄 تم إعادة تعيين المنتجات');
+            }
+        }
+
+        // إظهار رسالة toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // إغلاق النافذة عند الضغط على Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // إغلاق النافذة عند الضغط خارجها
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        console.log('✨ لوحة تحكم LUXE V6.0 تم تحميلها بنجاح!');
+    </script>
+</body>
+</html>
